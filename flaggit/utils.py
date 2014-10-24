@@ -6,7 +6,7 @@ def flag(obj, user=None, ip=None, comment=None):
         object_id=obj.pk,
         content_type=ContentType.objects.get_for_model(obj)
     )
-    
+
     if user:
         flag_instance, created = FlagInstance.objects.get_or_create(
             flag=flag,
@@ -20,6 +20,14 @@ def flag(obj, user=None, ip=None, comment=None):
     flag_instance.ip = ip
     flag_instance.comment = comment
     flag_instance.save()
-    
+
     return flag_instance
-    
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
