@@ -6,7 +6,7 @@ from rest_framework.reverse import reverse_lazy
 from .models import *
 
 
-class ReasonSeriliazer(serializers.ModelSerializer):
+class ReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reason
 
@@ -27,9 +27,7 @@ class FlagSerializer(serializers.Serializer):
         return attrs
 
     def validate(self, attrs):
-#         import pdb;pdb.set_trace()
         if attrs.get('comment') or attrs.get('reason_id') :
             return attrs
         raise serializers.ValidationError("need to define either reason or comment")
-
 

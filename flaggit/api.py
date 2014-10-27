@@ -2,19 +2,30 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.views import APIView
 
 from . import utils
 from .models import *
-from .serializers import FlagSerializer
+from .serializers import FlagSerializer, ReasonSerializer
 
 
 User = get_user_model()
 
 class CreateFlag(GenericAPIView):
     """
+    Api to create a flag of an object app
     
+    Args:
+        app_model: (string) contain app name and it's model,
+                   with format "appname.modelname"
+        object_id: (integer) id of the object to be flagged
+        comment : (string) additional comment from user
+        reason_id : (string) predefined reason flag
+        
+    Returns:
+        string "success" if successfully added to database,
+        otherwise an array of errors will be shown
     """
     serializer_class = FlagSerializer
 
@@ -41,7 +52,7 @@ class CreateFlag(GenericAPIView):
                 model = contenttype.model_class()
                 obj = model.objects.get(id=object_id)
             except ContentType.DoesNotExist :
-                errors.append("content type '{}.{}' does not exist")
+                errors.append("content type '%s.%s' does not exist" % (appname, modelname))
             except model.DoesNotExist:
                 errors.append("No such %s object with id %s" % (model.__name__, object_id))
 
@@ -65,3 +76,8 @@ class CreateFlag(GenericAPIView):
                 return Response('success')
 
         return Response(serializer.errors)
+
+
+class RetrieveReason(ListAPIView):
+    queryset = Reason.objects.all()
+    serializer_class = ReasonSerializer

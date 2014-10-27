@@ -6,8 +6,7 @@ def flag(obj, user=None, ip=None, comment=None):
         object_id=obj.pk,
         content_type=ContentType.objects.get_for_model(obj)
     )
-
-    if user:
+    if user and not user.is_anonymous():
         flag_instance, created = FlagInstance.objects.get_or_create(
             flag=flag,
             user=user,

@@ -55,13 +55,13 @@ class Flag(models.Model):
 class FlagInstance(models.Model):
     # when user flag a content
     flag = models.ForeignKey(Flag, related_name='flags')
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
     ip = models.IPAddressField(null=True)
     datetime = models.DateTimeField(auto_now_add=True)
 
     # predefined reason
     reason = models.ForeignKey(Reason, null=True)
-    comment = models.CharField(max_length=300, blank=True)
+    comment = models.CharField(max_length=300, blank=True, null=True)
 
     def __unicode__(self):
         return u'%s: %s' % (self.user, self.flag.content_object)
