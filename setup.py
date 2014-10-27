@@ -15,4 +15,7 @@ setup(
     include_package_data=True,
     package_data={'flaggit': ['templates/flaggit/*.html'], },
     zip_safe=False,
+    install_requires=[
+        'django-rest-framework',
+    ],
 )
